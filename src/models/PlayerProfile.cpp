@@ -23,7 +23,7 @@ PlayerProfile::PlayerProfile(
 }
 
 PlayerProfile::~PlayerProfile(){
-    std::cout << "Destruyendo objeto tipo PlayerProfile con id: " << this->id << std::endl;
+    std::cout << "[PlayerProfile] destruyendo objeto con id: " << this->id << std::endl;
 }
 
 PlayerProfile* PlayerProfile::setId(const int id){
