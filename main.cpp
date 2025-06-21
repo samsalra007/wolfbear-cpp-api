@@ -5,6 +5,8 @@
 #include "requests/CreatePlayerRequest.h"
 #include "responses/CreatePlayerResponse.h"
 
+#include "wrappers/MySqlWrapper.h"
+
 int main () {
     std::cout << "Hola, esto esta ejecutandose en C++ " << std:: endl;
 
@@ -25,6 +27,9 @@ int main () {
     GetPlayerResponse *gpr = profileManager->getPlayer(gprq);
     gpr->getPlayerProfile()->logme();
 
+    MySqlWrapper *db = new MySqlWrapper();
+    db->connect();
+    
     delete gpr;
     delete gprq;
     delete response;
