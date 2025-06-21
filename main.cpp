@@ -10,7 +10,7 @@ int main () {
 
     ProfileManager *profileManager = new ProfileManager();
 
-    PlayerProfile *player = new PlayerProfile("wolfbear", "none", "Osito", "Quesito", "cheese@wolfbear.mx", "Cheese Wolfbear");
+    PlayerProfile *player = new PlayerProfile(1, "wolfbear", "none", "Osito", "Quesito", "cheese@wolfbear.mx", "Cheese Wolfbear");
     CreatePlayerRequest *request = new CreatePlayerRequest();
         request->withPlayerProfile(player);
     
@@ -18,5 +18,11 @@ int main () {
     player = response->getPlayerProfile();
 
     player->logme();
+
+    std::cout << "Probando profile manager get" << std::endl;
+
+    GetPlayerResponse *gpr = profileManager->getPlayer((new GetPlayerRequest())->withId(1));
+    gpr->getPlayerProfile()->logme();
+
     return 0;
 }

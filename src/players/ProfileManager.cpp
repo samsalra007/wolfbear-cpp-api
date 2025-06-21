@@ -11,31 +11,41 @@
 #include "responses/DeletePlayerResponse.h"
 
 ProfileManager::ProfileManager(){
-    std::cout << "Construyendo el administrador de perfiles" << std:: endl;
+    std::cout << "Construyendo el objeto ProfileManager" << std:: endl;
 }
 
 ProfileManager::~ProfileManager(){
-    std::cout << "Destruyendo el administrador de perfiles" << std:: endl;
+    std::cout << "Destruyendo el objeto ProfileManager" << std:: endl;
 }
 
 CreatePlayerResponse* ProfileManager::createPlayer(const CreatePlayerRequest *request) const {
-    CreatePlayerResponse* response = new CreatePlayerResponse();
+    CreatePlayerResponse *response = new CreatePlayerResponse();
     response->withPlayerProfile(request->getPlayerProfile());
     return response;
 }
 
 UpdatePlayerResponse* ProfileManager::updatePlayer(const UpdatePlayerRequest *request) const {
-    UpdatePlayerResponse* response = new UpdatePlayerResponse();
+    UpdatePlayerResponse *response = new UpdatePlayerResponse();
     response->withPlayerProfile(request->getPlayerProfile());
     return response;
 }
 
 DeletePlayerResponse* ProfileManager::deletePlayer(const DeletePlayerRequest *request) const {
-    DeletePlayerResponse* response = new DeletePlayerResponse();
+    DeletePlayerResponse *response = new DeletePlayerResponse();
     response->withPlayerProfile(request->getPlayerProfile());
     return response;
 }
 
-void ProfileManager::getPlayer(){
-    std::cout << "Intentando obtener un usuario" << std:: endl;
+GetPlayerResponse* ProfileManager::getPlayer(const GetPlayerRequest*request) const {
+    GetPlayerResponse *response = new GetPlayerResponse();
+    PlayerProfile *profile = new PlayerProfile();
+
+    profile
+        ->setId(9999)
+        ->setEmail("test@test.com")
+        ->setNames("Testing names")
+        ->setPrefferedName("Testing preffered name");
+
+    response->withPlayerProfile(profile);
+    return response;
 }
