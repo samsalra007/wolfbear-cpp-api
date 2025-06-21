@@ -12,7 +12,7 @@ private:
     std::string prefferedName;
 
 public:
-    PlayerProfile();
+    PlayerProfile() = default;
     PlayerProfile(
         const int id,
         const std::string& username,

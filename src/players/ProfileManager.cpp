@@ -1,4 +1,6 @@
 #include <iostream>
+#include <list>
+#include <memory>
 
 #include "players/ProfileManager.h"
 
@@ -18,8 +20,12 @@ ProfileManager::~ProfileManager(){
     std::cout << "Destruyendo el objeto ProfileManager" << std:: endl;
 }
 
-CreatePlayerResponse* ProfileManager::createPlayer(const CreatePlayerRequest *request) const {
+CreatePlayerResponse* ProfileManager::createPlayer(const CreatePlayerRequest *request) {
     CreatePlayerResponse *response = new CreatePlayerResponse();
+    PlayerProfile *playerProfile = request->getPlayerProfile();
+
+    this->players.push_front(std::unique_ptr<PlayerProfile>(playerProfile));
+
     response->withPlayerProfile(request->getPlayerProfile());
     return response;
 }
@@ -36,7 +42,7 @@ DeletePlayerResponse* ProfileManager::deletePlayer(const DeletePlayerRequest *re
     return response;
 }
 
-GetPlayerResponse* ProfileManager::getPlayer(const GetPlayerRequest*request) const {
+GetPlayerResponse* ProfileManager::getPlayer(const GetPlayerRequest*request){
     GetPlayerResponse *response = new GetPlayerResponse();
     PlayerProfile *profile = new PlayerProfile();
 
@@ -45,6 +51,8 @@ GetPlayerResponse* ProfileManager::getPlayer(const GetPlayerRequest*request) con
         ->setEmail("test@test.com")
         ->setNames("Testing names")
         ->setPrefferedName("Testing preffered name");
+
+    this->players.push_front(std::unique_ptr<PlayerProfile>(profile));
 
     response->withPlayerProfile(profile);
     return response;

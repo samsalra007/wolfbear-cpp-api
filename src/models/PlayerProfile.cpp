@@ -2,10 +2,6 @@
 
 #include "models/PlayerProfile.h"
 
-PlayerProfile::PlayerProfile(){
-    std::cout << "Construyendo objeto tipo PlayerProfile sin parametros" << std::endl;
-}
-
 PlayerProfile::PlayerProfile(
     const int id,
     const std::string& username,
@@ -27,7 +23,7 @@ PlayerProfile::PlayerProfile(
 }
 
 PlayerProfile::~PlayerProfile(){
-    std::cout << "Destruyendo objeto tipo PlayerProfile" << std::endl;
+    std::cout << "Destruyendo objeto tipo PlayerProfile con id: " << this->id << std::endl;
 }
 
 PlayerProfile* PlayerProfile::setId(const int id){

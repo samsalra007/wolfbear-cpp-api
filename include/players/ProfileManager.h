@@ -1,4 +1,8 @@
 #pragma once
+#include <list>
+#include <memory>
+
+#include "models/PlayerProfile.h"
 
 #include "requests/CreatePlayerRequest.h"
 #include "requests/UpdatePlayerRequest.h"
@@ -11,12 +15,15 @@
 #include "responses/GetPlayerResponse.h"
 
 class ProfileManager {
+    private:
+        std::list<std::unique_ptr<PlayerProfile>> players;
+        
     public:
         ProfileManager();
         ~ProfileManager();
 
-        CreatePlayerResponse    *createPlayer(const CreatePlayerRequest* request) const;
+        CreatePlayerResponse    *createPlayer(const CreatePlayerRequest* request);
         UpdatePlayerResponse    *updatePlayer(const UpdatePlayerRequest* request) const;
         DeletePlayerResponse    *deletePlayer(const DeletePlayerRequest* request) const;
-        GetPlayerResponse       *getPlayer(const GetPlayerRequest* request) const;
+        GetPlayerResponse       *getPlayer(const GetPlayerRequest* request);
 };

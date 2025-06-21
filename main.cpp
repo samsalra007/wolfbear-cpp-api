@@ -21,8 +21,15 @@ int main () {
 
     std::cout << "Probando profile manager get" << std::endl;
 
-    GetPlayerResponse *gpr = profileManager->getPlayer((new GetPlayerRequest())->withId(1));
+    GetPlayerRequest *gprq = (new GetPlayerRequest())->withId(1);
+    GetPlayerResponse *gpr = profileManager->getPlayer(gprq);
     gpr->getPlayerProfile()->logme();
+
+    delete gpr;
+    delete gprq;
+    delete response;
+    delete request;
+    delete profileManager;
 
     return 0;
 }
