@@ -19,11 +19,11 @@ MySqlWrapper::MySqlWrapper(const std::string host, int port, const std::string u
     this->password = password;
 }
 
-void MySqlWrapper::connect(){
+bool MySqlWrapper::connect(){
     this->connection = mysql_init(nullptr);
     if(!this->connection){
         std::cout << "No fue posible inicializar el objeto de conexion MySQL" << std::endl;
-        return;
+        return false;
     }
 
     if(!mysql_real_connect(
@@ -34,15 +34,18 @@ void MySqlWrapper::connect(){
         this->database.c_str(),
         this->port, nullptr, 0)){
             std::cout << "Conexion fallida MySQL" << std::endl;
-            return;
+            return false;
     }
 
     std::cout << "Conexion exitosa a la base de datos MySQL" << std::endl;
+    return true;
+}
 
-    if(mysql_query(this->connection, "SELECT * FROM players ")){
+MYSQL_RES* MySqlWrapper::executeQuery(const std::string query){
+    if(mysql_query(this->connection, query.c_str())){
         std::cout << "No fue posible ejecutar la consulta" << std::endl;
         mysql_close(this->connection);
-        return;
+        return NULL;
     }
 
     std::cout << "Obteniendo datos de resultados MySQL" << std::endl;
@@ -51,17 +54,12 @@ void MySqlWrapper::connect(){
     if(!result){
         std::cout << "No fue posible almacenar los datos de resultados" << std::endl;
         mysql_close(this->connection);
-        return;
+        return NULL;
     }
 
-    std::cout << "Resultados de la consulta" << std::endl;
-    MYSQL_ROW row;
-    while ((row = mysql_fetch_row(result))) {
-        std::cout << "ID: " << row[0] << ", Username: " << row[1] << "\n";
-    }
+    return result;
+}
 
-    std::cout << "Cerrando conexion MySQL" << std::endl;
-
-    mysql_free_result(result);
+void MySqlWrapper::disconnect(){
     mysql_close(this->connection);
 }
