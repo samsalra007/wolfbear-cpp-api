@@ -16,8 +16,12 @@ class MySqlWrapper {
     public:
         MySqlWrapper();
         MySqlWrapper(const std::string host, int port, const std::string username, const std::string password);
-
+        ~MySqlWrapper();
+        
         bool connect();
-        MYSQL_RES* executeQuery(const std::string query);
+        
+        MYSQL_RES * executeQuery(const std::string query);
+        MYSQL * getConnection();
+
         void disconnect();
 };

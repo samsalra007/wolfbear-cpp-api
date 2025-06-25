@@ -1,39 +1,31 @@
 #include <iostream>
+
 #include "players/ProfileManager.h"
 
-#include "models/PlayerProfile.h"
 #include "requests/CreatePlayerRequest.h"
 #include "responses/CreatePlayerResponse.h"
 
-#include "wrappers/MySqlWrapper.h"
+#include "models/PlayerProfile.h"
 
 int main () {
     std::cout << "Hola, esto esta ejecutandose en C++ " << std:: endl;
 
-    ProfileManager *profileManager = new ProfileManager();
+    ProfileManager * profileManager = new ProfileManager();
 
-    PlayerProfile *player = new PlayerProfile(1, "wolfbear", "none", "Osito", "Quesito", "cheese@wolfbear.mx", "Cheese Wolfbear");
-    CreatePlayerRequest *request = new CreatePlayerRequest();
-        request->withPlayerProfile(player);
+    GetPlayerRequest * request = new GetPlayerRequest();
+    request->setId(1);
     
-    CreatePlayerResponse *response = profileManager->createPlayer(request);
-    player = response->getPlayerProfile();
-
-    player->logme();
-
-    std::cout << "Probando profile manager get" << std::endl;
-
-    GetPlayerRequest *gprq = (new GetPlayerRequest())->withId(1);
-    GetPlayerResponse *gpr = profileManager->getPlayer(gprq);
-    gpr->getPlayerProfile()->logme();
-
-    MySqlWrapper *db = new MySqlWrapper();
-    db->connect();
+    GetPlayerResponse * response = profileManager->getPlayer(request);
     
-    delete gpr;
-    delete gprq;
-    delete response;
+    PlayerProfile * player = response->getPlayerProfile();
+    
+    if(player){
+        player->logme();
+        delete player;
+    }
+    
     delete request;
+    delete response;
     delete profileManager;
 
     return 0;

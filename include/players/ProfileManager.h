@@ -1,8 +1,8 @@
 #pragma once
-#include <list>
-#include <memory>
 
 #include "models/PlayerProfile.h"
+#include "wrappers/MySqlWrapper.h"
+#include "dao/PlayerProfileDbDao.h"
 
 #include "requests/CreatePlayerRequest.h"
 #include "requests/UpdatePlayerRequest.h"
@@ -16,14 +16,14 @@
 
 class ProfileManager {
     private:
-        std::list<std::unique_ptr<PlayerProfile>> players;
+        PlayerProfileDbDao * playerProfileDbDao;
         
     public:
         ProfileManager();
         ~ProfileManager();
 
-        CreatePlayerResponse    *createPlayer(const CreatePlayerRequest* request);
-        UpdatePlayerResponse    *updatePlayer(const UpdatePlayerRequest* request) const;
-        DeletePlayerResponse    *deletePlayer(const DeletePlayerRequest* request) const;
-        GetPlayerResponse       *getPlayer(const GetPlayerRequest* request);
+        CreatePlayerResponse    * createPlayer(const CreatePlayerRequest* request);
+        UpdatePlayerResponse    * updatePlayer(const UpdatePlayerRequest* request) const;
+        DeletePlayerResponse    * deletePlayer(const DeletePlayerRequest* request) const;
+        GetPlayerResponse       * getPlayer(const GetPlayerRequest* request);
 };

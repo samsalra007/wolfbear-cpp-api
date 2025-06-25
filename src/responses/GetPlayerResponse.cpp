@@ -9,7 +9,7 @@ GetPlayerResponse::~GetPlayerResponse(){
     std::cout << "Destruyendo objeto GetPlayerResponse" << std::endl;
 }
 
-GetPlayerResponse* GetPlayerResponse::withPlayerProfile(PlayerProfile *pp){
+GetPlayerResponse* GetPlayerResponse::setPlayerProfile(PlayerProfile *pp){
     this->playerProfile = pp;
     return this;
 }

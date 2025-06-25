@@ -9,7 +9,7 @@ GetPlayerRequest::~GetPlayerRequest(){
     std::cout << "Destruyendo objeto GetPlayerRequest" << std::endl;
 }
 
-GetPlayerRequest* GetPlayerRequest::withId(int id){
+GetPlayerRequest* GetPlayerRequest::setId(int id){
     this->id = id;
     return this;
 }

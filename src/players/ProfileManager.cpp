@@ -12,19 +12,22 @@
 #include "responses/UpdatePlayerResponse.h"
 #include "responses/DeletePlayerResponse.h"
 
+#include <mysql.h>
+#include "dao/PlayerProfileDbDao.h"
+
 ProfileManager::ProfileManager(){
     std::cout << "Construyendo el objeto ProfileManager" << std:: endl;
+    this->playerProfileDbDao = new PlayerProfileDbDao();
 }
 
 ProfileManager::~ProfileManager(){
     std::cout << "Destruyendo el objeto ProfileManager" << std:: endl;
+    delete this->playerProfileDbDao;
 }
 
 CreatePlayerResponse* ProfileManager::createPlayer(const CreatePlayerRequest *request) {
     CreatePlayerResponse *response = new CreatePlayerResponse();
     PlayerProfile *playerProfile = request->getPlayerProfile();
-
-    this->players.push_front(std::unique_ptr<PlayerProfile>(playerProfile));
 
     response->withPlayerProfile(request->getPlayerProfile());
     return response;
@@ -42,18 +45,13 @@ DeletePlayerResponse* ProfileManager::deletePlayer(const DeletePlayerRequest *re
     return response;
 }
 
-GetPlayerResponse* ProfileManager::getPlayer(const GetPlayerRequest*request){
-    GetPlayerResponse *response = new GetPlayerResponse();
-    PlayerProfile *profile = new PlayerProfile();
+GetPlayerResponse* ProfileManager::getPlayer(const GetPlayerRequest * request){
+    GetPlayerResponse * response = new GetPlayerResponse();
+    
+    PlayerProfile * playerProfile = this->playerProfileDbDao
+        ->getPlayer(request->getId());
 
-    profile
-        ->setId(9999)
-        ->setEmail("test@test.com")
-        ->setNames("Testing names")
-        ->setPrefferedName("Testing preffered name");
+    response->setPlayerProfile(playerProfile);
 
-    this->players.push_front(std::unique_ptr<PlayerProfile>(profile));
-
-    response->withPlayerProfile(profile);
     return response;
 }

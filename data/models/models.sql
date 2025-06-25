@@ -16,9 +16,10 @@ CREATE TABLE players (
     password VARCHAR(200),
 
     PRIMARY KEY (id)
-) ENGINE = InnoDB;
+) ENGINE = InnoDB charset=utf8;
 
--- Tabla de perfiles (historial completo)
+-- Tabla de perfiles
+DROP TABLE IF EXISTS profiles;
 CREATE TABLE profiles (
     id INT NOT NULL AUTO_INCREMENT,
     player_id INT NOT NULL,
@@ -30,17 +31,24 @@ CREATE TABLE profiles (
     lastname VARCHAR(60),
     email VARCHAR(50),
 
-    PRIMARY KEY (id),
+    profile_image VARCHAR(30),
+
+    PRIMARY KEY(id),
     FOREIGN KEY (player_id) REFERENCES players(id)
-) ENGINE = InnoDB;
+) ENGINE = InnoDB charset=utf8;
 
--- Tabla que apunta al perfil más reciente
+
 CREATE TABLE profiles_latest (
-    id INT NOT NULL AUTO_INCREMENT,
     profile_id INT NOT NULL,
+    latest_timestam_date DATETIME,
 
-    modification_date DATETIME NOT NULL,
-
-    PRIMARY KEY (id),
+    PRIMARY KEY(profile_id),
     FOREIGN KEY (profile_id) REFERENCES profiles(id)
-) ENGINE = InnoDB;
+    
+) ENGINE = InnoDB charset=utf8;
+
+-- Tabla de aplicaciones
+CREATE TABLE applications (
+
+
+) ENGINE = InnoDB charset=utf8;

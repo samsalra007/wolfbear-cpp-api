@@ -5,6 +5,7 @@
 #include "wrappers/MySqlWrapper.h"
 
 MySqlWrapper::MySqlWrapper(){
+    std::cout << "Construyendo objeto MySqlWrapper" << std::endl;
     this->host = "localhost";
     this->port = 3306;
     this->username = "wolfbear_user";
@@ -13,10 +14,27 @@ MySqlWrapper::MySqlWrapper(){
 }
 
 MySqlWrapper::MySqlWrapper(const std::string host, int port, const std::string username, const std::string password){
+    std::cout << "Construyendo objeto MySqlWrapper" << std::endl;
     this->host = host;
     this->port = port;
     this->username = username;
     this->password = password;
+}
+
+MySqlWrapper::~MySqlWrapper(){
+    std::cout << "Destruyendo objeto MySqlWrapper" << std::endl;
+
+    std::cout << "Intentando verificar si existe una conexion activa a MySQL" << std::endl;
+    if( this->connection != NULL && mysql_ping(this->connection) == 0 ){
+        std::cout << "Se encontro una conexion activa, procediendo a cerrarla" << std::endl;
+        mysql_close(this->connection);
+    } else {
+        std::cout << "No se encontro una conexion activa a MySQL" << std::endl;
+    }
+}
+
+MYSQL * MySqlWrapper::getConnection(){
+    return this->connection;
 }
 
 bool MySqlWrapper::connect(){
@@ -49,12 +67,17 @@ MYSQL_RES* MySqlWrapper::executeQuery(const std::string query){
     }
 
     std::cout << "Obteniendo datos de resultados MySQL" << std::endl;
-
+    
     MYSQL_RES *result = mysql_store_result(this->connection);
+
     if(!result){
         std::cout << "No fue posible almacenar los datos de resultados" << std::endl;
         mysql_close(this->connection);
         return NULL;
+    }
+
+    if(mysql_field_count(this->connection) == 0){
+        std::cout << "La consulta realizada no regresa datos ya que es de seleccion" << std::endl;
     }
 
     return result;

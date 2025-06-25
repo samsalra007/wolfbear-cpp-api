@@ -8,6 +8,6 @@ class GetPlayerRequest {
         GetPlayerRequest();
         ~GetPlayerRequest();
 
-        GetPlayerRequest* withId(int id);
+        GetPlayerRequest* setId(int id);
         int getId() const;
 };

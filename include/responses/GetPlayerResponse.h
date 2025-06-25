@@ -9,6 +9,6 @@ class GetPlayerResponse {
         GetPlayerResponse();
         ~GetPlayerResponse();
 
-        GetPlayerResponse* withPlayerProfile(PlayerProfile* pp);
+        GetPlayerResponse* setPlayerProfile(PlayerProfile* pp);
         PlayerProfile* getPlayerProfile();
 };
