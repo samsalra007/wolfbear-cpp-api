@@ -1,32 +1,20 @@
 #pragma once
+
 #include <string>
+#include <memory>
+#include "wrappers/mysql/MySqlPreparedStatement.h"
 
 #include <mysql.h>
 
 class MySqlWrapper {
     private:
-        std::string host;
-        int port;
-        std::string database;
-        std::string username;
-        std::string password;
-
-        MYSQL *connection;
-
+        MYSQL * connection;
     public:
         MySqlWrapper();
-        MySqlWrapper(const std::string host, int port, const std::string username, const std::string password);
         ~MySqlWrapper();
-        
-        bool connect();
-        
-        MYSQL_RES   * executeQuery(const std::string query);
-        MYSQL_STMT  * createPreparedStatement();
-        
-        void statementPrepare(MYSQL_STMT * preparedStatement, std::string query);
-        void statementBindParams(MYSQL_STMT * preparedStatement, MYSQL_BIND * bindings);
-        
-        MYSQL * getConnection();
 
+        MYSQL * connect(const std::string host, int port, const std::string username, const std::string password, const std::string database);
+        std::unique_ptr<MySqlPreparedStatement> prepareStatement (const std::string query);
+        
         void disconnect();
 };
