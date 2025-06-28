@@ -42,21 +42,7 @@ PlayerProfile * PlayerProfileDbDao::getPlayer(const int id){
     auto ps = this->mySqlWrapper->prepareStatement(query);
     ps->setInt(id);
 
-    auto binder = ps->executeQuery();
+    auto result = ps->executeQuery();
     
-    PlayerProfile * playerProfile = new PlayerProfile();
-    playerProfile
-        ->setId(id)
-        ->setUsername(binder->getString(0))
-        ->setNames(binder->getString(1))
-        ->setLastName(binder->getString(2))
-        ->setEmail(binder->getString(3))
-        ->setPrefferedName(binder->getString(4))
-        ->setProfileImage(binder->getString(5));
-
-    // mysql_free_result(metadata);
-    // mysql_stmt_close(stmt);
-
-    this->mySqlWrapper->disconnect();    
-    return playerProfile;
+    return NULL;
 }

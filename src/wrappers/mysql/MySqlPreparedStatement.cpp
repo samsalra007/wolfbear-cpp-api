@@ -64,59 +64,50 @@ void MySqlPreparedStatement::clear(){
 }
 
 std::unique_ptr<MySqlResultBinder> MySqlPreparedStatement::executeQuery(){
-    MYSQL_STMT* statement = this->getMySqlStatement();
-
-    std::cout << "Intentando ejecutar consulta" << std::endl;
-    std::cout << this->query << std::endl;
-
-    // 1. Ejecutar
-    if (mysql_stmt_execute(statement)) {
-        std::cerr << "Error al ejecutar la consulta: " << mysql_stmt_error(statement) << std::endl;
-        return nullptr;
-    }
-
-    // 2. Almacenar resultados en memoria (para poder acceder a metadata)
-    if (mysql_stmt_store_result(statement)) {
-        std::cerr << "Error en mysql_stmt_store_result: " << mysql_stmt_error(statement) << std::endl;
-        return nullptr;
-    }
-
-    // 3. Obtener metadata del resultado
-    MYSQL_RES* metadata = mysql_stmt_result_metadata(statement);
-    if (!metadata) {
-        std::cerr << "No se pudo obtener metadata del resultado" << std::endl;
-        return nullptr;
-    }
-
-    unsigned int fieldCount = mysql_num_fields(metadata);
+    MYSQL_STMT *statement = this->getMySqlStatement();
     auto binder = std::make_unique<MySqlResultBinder>();
 
-    // 4. Reservar buffers y estructuras de longitud/nulos
+    if (mysql_stmt_execute(statement)) {
+        std::cerr << "Error al ejecutar: " << mysql_stmt_error(statement) << std::endl;
+        return nullptr;
+    }
+
+    MYSQL_RES *metadata = mysql_stmt_result_metadata(statement);
+    unsigned int fieldCount = mysql_num_fields(metadata);
+    
+    std::cout << "Field count: " << fieldCount << std::endl;
+
+    std::vector<std::vector<char>> bufferData(fieldCount);
+    std::vector<MYSQL_BIND> binds(fieldCount);
+    std::vector<unsigned long> lengths(fieldCount);
+    std::vector<my_bool> isNull(fieldCount);
+
     for (unsigned int i = 0; i < fieldCount; ++i) {
-        binder->addStringField(256);  // 256 bytes como tamaño fijo temporal (ajustable)
+        bufferData[i].resize(256); // espacio fijo por ahora
+        memset(&binds[i], 0, sizeof(MYSQL_BIND));
+        binds[i].buffer_type = MYSQL_TYPE_STRING;
+        binds[i].buffer = bufferData[i].data();
+        binds[i].buffer_length = bufferData[i].size();
+        binds[i].length = &lengths[i];
+        binds[i].is_null = &isNull[i];
     }
 
-    // 5. Bind de resultados
-    if (mysql_stmt_bind_result(statement, binder->data())) {
-        std::cerr << "Error en mysql_stmt_bind_result: " << mysql_stmt_error(statement) << std::endl;
-        mysql_free_result(metadata);
-        return nullptr;
+    // Bindea buffers de salida
+    mysql_stmt_bind_result(statement, binds.data());
+    mysql_stmt_store_result(statement);
+
+    // Fetch y lectura
+    while (mysql_stmt_fetch(statement) == 0) {
+        for (unsigned int i = 0; i < fieldCount; ++i) {
+            if (isNull[i]) {
+                std::cout << "Campo " << i << ": NULL" << std::endl;
+            } else {
+                std::cout << "Campo " << i << ": "
+                        << std::string(bufferData[i].data(), lengths[i]) << std::endl;
+            }
+        }
     }
-
-    // 6. Fetch
-    if (mysql_stmt_fetch(statement) != 0) {
-        std::cerr << "No se pudo hacer fetch del resultado mysql_stmt_fetch" << std::endl;
-        mysql_free_result(metadata);
-        return nullptr;
-    }
-
-    for (size_t i = 0; i < binder->size(); ++i) {
-        std::cout << "[Debug] Columna " << i << ": " << binder->getString(i) << std::endl;
-    }
-
-    // 7. Limpieza de metadata (no libera los datos, solo estructura)
-    mysql_free_result(metadata);
-
+    
     return binder;
 }
 
