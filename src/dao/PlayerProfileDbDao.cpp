@@ -1,10 +1,13 @@
 #include "dao/PlayerProfileDbDao.h"
 
+#include <memory>
 #include <iostream>
 #include <mysql.h>
 
 #include "models/PlayerProfile.h"
-#include "wrappers/MySqlWrapper.h"
+#include "wrappers/mysql/MySqlWrapper.h"
+#include "wrappers/mysql/MySqlBindWrapper.h"
+#include "wrappers/mysql/MySqlPreparedStatement.h"
 
 PlayerProfileDbDao::PlayerProfileDbDao(){
     std::cout << "Construyendo PlayerProfileDbDao" << std::endl;
@@ -40,17 +43,17 @@ PlayerProfile * PlayerProfileDbDao::getPlayer(const int id){
     query += "  profiles.id = profiles_latest.profile_id \n";
     query += "  AND players.id = profiles_latest.profile_id \n";
     query += "  AND players.id = ? ;";
+    
+    auto mySqlPreparedStatement = std::make_unique<MySqlPreparedStatement>();
+    
+    MYSQL_STMT * preparedStatement = mySqlWrapper->createPreparedStatement();
+    
+    auto mySqlBindWrapper = std::make_unique<MySqlBindWrapper>();
 
-    MYSQL_STMT * preparedStatement = mysql_stmt_init(connection);
-    MYSQL_BIND bindings [1];
+    mySqlBindWrapper->bindInt(id);
 
-    mysql_stmt_prepare(preparedStatement, query.c_str(), query.length());
-
-    memset(bindings, 0, sizeof(bindings));
-    bindings[0].buffer_type = MYSQL_TYPE_LONG;
-    bindings[0].buffer = (void *) &id;
-
-    mysql_stmt_bind_param(preparedStatement, bindings);
+    mySqlWrapper->statementPrepare(preparedStatement, query);
+    mySqlWrapper->statementBindParams(preparedStatement, mySqlBindWrapper->getBindArray());
     
     std::cout << "Intentando ejecutar consulta" << std::endl;
     std::cout << query << std::endl;
@@ -61,6 +64,8 @@ PlayerProfile * PlayerProfileDbDao::getPlayer(const int id){
     } else {
         std::cout << "Consulta realizada exitosamente" << std::endl;
     }
+
+    mySqlBindWrapper->clear();
     
     MYSQL_BIND result [6];
     char username[20], names[30], lastname[60], email[50], prefferedName[50], profileImage[30];
@@ -108,11 +113,11 @@ PlayerProfile * PlayerProfileDbDao::getPlayer(const int id){
 
     mysql_stmt_bind_result(preparedStatement, result);
     
-    PlayerProfile * playerProfile = new PlayerProfile();
+    PlayerProfile * playerProfile;
 
     if (mysql_stmt_fetch(preparedStatement) == 0) {
-        PlayerProfile *player = new PlayerProfile();
-        player
+        playerProfile = new PlayerProfile();
+        playerProfile
             ->setId(id)
             ->setUsername(username)
             ->setNames(names)
@@ -120,14 +125,12 @@ PlayerProfile * PlayerProfileDbDao::getPlayer(const int id){
             ->setPrefferedName(prefferedName)
             ->setEmail(email)
             ->setProfileImage(profileImage);
-
-        mysql_stmt_close(preparedStatement);
-        return player;
+        
     } else {
         std::cout << "No existen datos para bindear ya que la consulta es vacia" << std::endl;
     }
-
-    this->mySqlWrapper->disconnect();
     
-    return NULL;
+    mysql_stmt_close(preparedStatement);
+    this->mySqlWrapper->disconnect();    
+    return playerProfile;
 }

@@ -4,7 +4,7 @@
 #include <mysql.h>
 
 #include "models/PlayerProfile.h"
-#include "wrappers/MySqlWrapper.h"
+#include "wrappers/mysql/MySqlWrapper.h"
 
 class PlayerProfileDbDao {
     private:

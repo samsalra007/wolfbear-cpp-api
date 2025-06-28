@@ -20,7 +20,12 @@ class MySqlWrapper {
         
         bool connect();
         
-        MYSQL_RES * executeQuery(const std::string query);
+        MYSQL_RES   * executeQuery(const std::string query);
+        MYSQL_STMT  * createPreparedStatement();
+        
+        void statementPrepare(MYSQL_STMT * preparedStatement, std::string query);
+        void statementBindParams(MYSQL_STMT * preparedStatement, MYSQL_BIND * bindings);
+        
         MYSQL * getConnection();
 
         void disconnect();

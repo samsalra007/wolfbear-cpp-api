@@ -1,8 +1,9 @@
 #include <iostream>
 #include <string>
+#include <vector>
 
 #include <mysql.h>
-#include "wrappers/MySqlWrapper.h"
+#include "wrappers/mysql/MySqlWrapper.h"
 
 MySqlWrapper::MySqlWrapper(){
     std::cout << "Construyendo objeto MySqlWrapper" << std::endl;
@@ -57,6 +58,19 @@ bool MySqlWrapper::connect(){
 
     std::cout << "Conexion exitosa a la base de datos MySQL" << std::endl;
     return true;
+}
+
+MYSQL_STMT * MySqlWrapper::createPreparedStatement(){
+    MYSQL_STMT * preparedStatement = mysql_stmt_init(this->connection);
+    return preparedStatement;
+}
+
+void MySqlWrapper::statementPrepare(MYSQL_STMT * preparedStatement, std::string query){
+    mysql_stmt_prepare(preparedStatement, query.c_str(), query.length());
+}
+
+void MySqlWrapper::statementBindParams(MYSQL_STMT * preparedStatement, MYSQL_BIND * bindings){
+    mysql_stmt_bind_param(preparedStatement, bindings);
 }
 
 MYSQL_RES* MySqlWrapper::executeQuery(const std::string query){

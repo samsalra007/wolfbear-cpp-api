@@ -1,7 +1,7 @@
 #pragma once
 
 #include "models/PlayerProfile.h"
-#include "wrappers/MySqlWrapper.h"
+#include "wrappers/mysql/MySqlWrapper.h"
 #include "dao/PlayerProfileDbDao.h"
 
 #include "requests/CreatePlayerRequest.h"
