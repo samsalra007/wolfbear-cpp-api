@@ -9,7 +9,8 @@ PlayerProfile::PlayerProfile(
     const std::string& names,
     const std::string& lastName,
     const std::string& email,
-    const std::string& prefferedName)
+    const std::string& prefferedName,
+    const std::string& profileImage)
 {
     std::cout << "Construyendo objeto tipo PlayerProfile con parametros" << std::endl;
 
@@ -20,6 +21,7 @@ PlayerProfile::PlayerProfile(
     this->lastName = lastName;
     this->email = email;
     this->prefferedName = prefferedName;
+    this->profileImage = profileImage;
 }
 
 PlayerProfile::~PlayerProfile(){
@@ -61,6 +63,11 @@ PlayerProfile* PlayerProfile::setEmail(const std::string& email){
     return this;
 }
 
+PlayerProfile* PlayerProfile::setProfileImage(const std::string& profileImage){
+    this->profileImage = profileImage;
+    return this;
+}
+
 int PlayerProfile::getId() const {
     return this->id;
 }
@@ -85,14 +92,18 @@ std::string PlayerProfile::getEmail() const {
     return this->email;
 }
 
+std::string PlayerProfile::getProfileImage() const {
+    return this->profileImage;
+}
+
 void PlayerProfile::logme() {
     std::cout << "[PlayerProfile] Examinando al objeto en la dirección de memoria " << this << std::endl;
-    std::cout << "[PlayerProfile] id: "                 << this->id << std::endl;
-    std::cout << "[PlayerProfile] username: "           << this->username << std::endl;
-    std::cout << "[PlayerProfile] password: ***** "     << std::endl;
-    std::cout << "[PlayerProfile] names: "              << this->names << std::endl;
-    std::cout << "[PlayerProfile] lastName: "           << this->lastName << std::endl;
-    std::cout << "[PlayerProfile] prefferedName: "      << this->prefferedName << std::endl;
-    std::cout << "[PlayerProfile] email: "              << this->email << std::endl;
-
+    std::cout << "  id: "                 << this->id << std::endl;
+    std::cout << "  username: "           << this->username << std::endl;
+    std::cout << "  password: ***** "     << std::endl;
+    std::cout << "  names: "              << this->names << std::endl;
+    std::cout << "  lastName: "           << this->lastName << std::endl;
+    std::cout << "  prefferedName: "      << this->prefferedName << std::endl;
+    std::cout << "  email: "              << this->email << std::endl;
+    std::cout << "  profileImage: "       << this->profileImage << std::endl;
 }

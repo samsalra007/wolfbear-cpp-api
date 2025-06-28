@@ -25,16 +25,21 @@ PlayerProfile * PlayerProfileDbDao::getPlayer(const int id){
 
     MYSQL * connection = this->mySqlWrapper->getConnection();
 
-    query += "SELECT \n";
-    query += "  pla.username, pro.names, pro.lastname, pro.profile_image \n";
+    query += " SELECT \n";
+    query += "  players.username, \n";
+    query += "  profiles.names, \n";
+    query += "  profiles.lastname, \n";
+    query += "  profiles.email, \n";
+    query += "  profiles.prefferedName, \n";
+    query += "  profiles.profile_image \n";
 
-    query += "FROM \n";
-    query += "  profiles pro \n";
+    query += " FROM \n";
+    query += "  profiles, profiles_latest, players \n";
 
-    query += "INNER JOIN profiles_latest pro_l ON pro_l.profile_id = pro.id \n";
-    query += "INNER JOIN players pla ON pla.id = pro.player_id \n";
-
-    query += "WHERE pla.id = ?";
+    query += " WHERE \n";
+    query += "  profiles.id = profiles_latest.profile_id \n";
+    query += "  AND players.id = profiles_latest.profile_id \n";
+    query += "  AND players.id = ? ;";
 
     MYSQL_STMT * preparedStatement = mysql_stmt_init(connection);
     MYSQL_BIND bindings [1];
@@ -57,10 +62,11 @@ PlayerProfile * PlayerProfileDbDao::getPlayer(const int id){
         std::cout << "Consulta realizada exitosamente" << std::endl;
     }
     
-    MYSQL_BIND result [4];
-    char username[20], names[30], lastname[60], profileImage [50];
-    unsigned long lengths[4];
-    my_bool is_null[4];
+    MYSQL_BIND result [6];
+    char username[20], names[30], lastname[60], email[50], prefferedName[50], profileImage[30];
+    unsigned long lengths[6];
+
+    my_bool is_null[6];
 
     memset(result, 0, sizeof(result));
 
@@ -83,21 +89,37 @@ PlayerProfile * PlayerProfileDbDao::getPlayer(const int id){
     result[2].is_null = &is_null[2];
 
     result[3].buffer_type = MYSQL_TYPE_STRING;
-    result[3].buffer = profileImage;
-    result[3].buffer_length = sizeof(profileImage);
+    result[3].buffer = email;
+    result[3].buffer_length = sizeof(email);
     result[3].length = &lengths[3];
     result[3].is_null = &is_null[3];
 
-     mysql_stmt_bind_result(preparedStatement, result);
+    result[4].buffer_type = MYSQL_TYPE_STRING;
+    result[4].buffer = prefferedName;
+    result[4].buffer_length = sizeof(prefferedName);
+    result[4].length = &lengths[4];
+    result[4].is_null = &is_null[4];
+
+    result[5].buffer_type = MYSQL_TYPE_STRING;
+    result[5].buffer = profileImage;
+    result[5].buffer_length = sizeof(profileImage);
+    result[5].length = &lengths[5];
+    result[5].is_null = &is_null[5];
+
+    mysql_stmt_bind_result(preparedStatement, result);
     
     PlayerProfile * playerProfile = new PlayerProfile();
 
     if (mysql_stmt_fetch(preparedStatement) == 0) {
         PlayerProfile *player = new PlayerProfile();
-        player->setId(id);
-        player->setUsername(username);
-        player->setNames(names);
-        player->setLastName(lastname);
+        player
+            ->setId(id)
+            ->setUsername(username)
+            ->setNames(names)
+            ->setLastName(lastname)
+            ->setPrefferedName(prefferedName)
+            ->setEmail(email)
+            ->setProfileImage(profileImage);
 
         mysql_stmt_close(preparedStatement);
         return player;

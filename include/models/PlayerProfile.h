@@ -10,6 +10,7 @@ private:
     std::string lastName;
     std::string email;
     std::string prefferedName;
+    std::string profileImage;
 
 public:
     PlayerProfile() = default;
@@ -20,7 +21,8 @@ public:
         const std::string& names,
         const std::string& lastName,
         const std::string& email,
-        const std::string& prefferedName
+        const std::string& prefferedName,
+        const std::string& profileImage
     );
     ~PlayerProfile();
 
@@ -29,16 +31,18 @@ public:
     PlayerProfile* setPassword(const std::string& password);
     PlayerProfile* setNames(const std::string& names);
     PlayerProfile* setLastName(const std::string& lastName);
-    PlayerProfile* setPrefferedName(const std::string& prefferedName);
     PlayerProfile* setEmail(const std::string& email);
+    PlayerProfile* setPrefferedName(const std::string& prefferedName);
+    PlayerProfile* setProfileImage(const std::string& profileImage);
 
     int getId() const;
     std::string getUsername() const;
     std::string getPassword() const;
     std::string getNames() const;
     std::string getLastName() const;
-    std::string getPrefferedName() const;
     std::string getEmail() const;
+    std::string getPrefferedName() const;
+    std::string getProfileImage() const;
 
     void logme();
 };
