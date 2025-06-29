@@ -25,5 +25,5 @@ class ProfileManager {
         CreatePlayerResponse    * createPlayer(const CreatePlayerRequest* request);
         UpdatePlayerResponse    * updatePlayer(const UpdatePlayerRequest* request) const;
         DeletePlayerResponse    * deletePlayer(const DeletePlayerRequest* request) const;
-        GetPlayerResponse       * getPlayer(const GetPlayerRequest* request);
+        std::unique_ptr<GetPlayerResponse> getPlayer(std::unique_ptr<GetPlayerRequest> & request);
 };

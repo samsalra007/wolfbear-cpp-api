@@ -9,13 +9,14 @@
 
 int main () {
     std::cout << "Hola, esto esta ejecutandose en C++ " << std:: endl;
+    int playerId = 1;
 
-    ProfileManager * profileManager = new ProfileManager();
-    const int playerId = 1;
-    GetPlayerRequest * request = new GetPlayerRequest();
+    auto profileManager     = std::make_unique<ProfileManager>();
+    auto request            = std::make_unique<GetPlayerRequest>();
+
     request->setId(playerId);
     
-    GetPlayerResponse * response = profileManager->getPlayer(request);
+    auto response = profileManager->getPlayer(request);
     
     PlayerProfile * player = response->getPlayerProfile();
     
@@ -26,10 +27,6 @@ int main () {
     } else {
         std::cout << "No se encontró el jugador con id:'" << playerId << "'" << std::endl;
     }
-    
-    delete request;
-    delete response;
-    delete profileManager;
 
     return 0;
 }

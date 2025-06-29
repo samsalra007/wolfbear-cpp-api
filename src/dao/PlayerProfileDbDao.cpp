@@ -42,7 +42,23 @@ PlayerProfile * PlayerProfileDbDao::getPlayer(const int id){
     auto ps = this->mySqlWrapper->prepareStatement(query);
     ps->setInt(id);
 
-    auto result = ps->executeQuery();
+    std::vector<MySqlResultBinder> results = ps->executeQuery();
+
+    if(results.size() == 0){
+        return nullptr;
+    }
+
+    MySqlResultBinder result = results.at(0);
+    PlayerProfile * player = new PlayerProfile();
     
-    return NULL;
+    player
+        ->setId(id)
+        ->setUsername(result.getString(0))
+        ->setNames(result.getString(1))
+        ->setLastName(result.getString(2))
+        ->setEmail(result.getString(3))
+        ->setPrefferedName(result.getString(4))
+        ->setProfileImage(result.getString(5));
+    
+    return player;
 }

@@ -63,52 +63,41 @@ void MySqlPreparedStatement::clear(){
     this->bindings.clear();
 }
 
-std::unique_ptr<MySqlResultBinder> MySqlPreparedStatement::executeQuery(){
+std::vector<MySqlResultBinder> MySqlPreparedStatement::executeQuery(){
     MYSQL_STMT *statement = this->getMySqlStatement();
-    auto binder = std::make_unique<MySqlResultBinder>();
+    std::vector<MySqlResultBinder> results;
 
     if (mysql_stmt_execute(statement)) {
         std::cerr << "Error al ejecutar: " << mysql_stmt_error(statement) << std::endl;
-        return nullptr;
+        return results;
     }
 
     MYSQL_RES *metadata = mysql_stmt_result_metadata(statement);
     unsigned int fieldCount = mysql_num_fields(metadata);
-    
-    std::cout << "Field count: " << fieldCount << std::endl;
 
-    std::vector<std::vector<char>> bufferData(fieldCount);
-    std::vector<MYSQL_BIND> binds(fieldCount);
-    std::vector<unsigned long> lengths(fieldCount);
-    std::vector<my_bool> isNull(fieldCount);
+    auto binder = std::make_unique<MySqlResultBinder>(fieldCount);
 
-    for (unsigned int i = 0; i < fieldCount; ++i) {
-        bufferData[i].resize(256); // espacio fijo por ahora
-        memset(&binds[i], 0, sizeof(MYSQL_BIND));
-        binds[i].buffer_type = MYSQL_TYPE_STRING;
-        binds[i].buffer = bufferData[i].data();
-        binds[i].buffer_length = bufferData[i].size();
-        binds[i].length = &lengths[i];
-        binds[i].is_null = &isNull[i];
-    }
-
-    // Bindea buffers de salida
-    mysql_stmt_bind_result(statement, binds.data());
+    mysql_stmt_bind_result(statement, binder->data());
     mysql_stmt_store_result(statement);
 
-    // Fetch y lectura
     while (mysql_stmt_fetch(statement) == 0) {
+        MySqlResultBinder rowCopy = binder->clone();
+        results.push_back(std::move(rowCopy));
+        
         for (unsigned int i = 0; i < fieldCount; ++i) {
-            if (isNull[i]) {
+            if (binder->getIsNull()[i]) {
                 std::cout << "Campo " << i << ": NULL" << std::endl;
             } else {
                 std::cout << "Campo " << i << ": "
-                        << std::string(bufferData[i].data(), lengths[i]) << std::endl;
+                        << binder->getString(i) << std::endl;
             }
         }
     }
-    
-    return binder;
+
+    mysql_stmt_free_result(statement);
+    mysql_stmt_close(statement);
+
+    return results;
 }
 
 MYSQL_STMT * MySqlPreparedStatement::getMySqlStatement(){

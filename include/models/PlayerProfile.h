@@ -27,13 +27,13 @@ public:
     ~PlayerProfile();
 
     PlayerProfile* setId(const int id);
-    PlayerProfile* setUsername(const std::string& username);
-    PlayerProfile* setPassword(const std::string& password);
-    PlayerProfile* setNames(const std::string& names);
-    PlayerProfile* setLastName(const std::string& lastName);
-    PlayerProfile* setEmail(const std::string& email);
-    PlayerProfile* setPrefferedName(const std::string& prefferedName);
-    PlayerProfile* setProfileImage(const std::string& profileImage);
+    PlayerProfile* setUsername(const std::string username);
+    PlayerProfile* setPassword(const std::string password);
+    PlayerProfile* setNames(const std::string names);
+    PlayerProfile* setLastName(const std::string lastName);
+    PlayerProfile* setEmail(const std::string email);
+    PlayerProfile* setPrefferedName(const std::string prefferedName);
+    PlayerProfile* setProfileImage(const std::string profileImage);
 
     int getId() const;
     std::string getUsername() const;

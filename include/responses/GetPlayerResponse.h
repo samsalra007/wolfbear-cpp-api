@@ -3,12 +3,12 @@
 
 class GetPlayerResponse {
     private:
-        PlayerProfile *playerProfile;
+        PlayerProfile * playerProfile;
 
     public:
         GetPlayerResponse();
         ~GetPlayerResponse();
 
-        GetPlayerResponse* setPlayerProfile(PlayerProfile* pp);
-        PlayerProfile* getPlayerProfile();
+        GetPlayerResponse * setPlayerProfile(PlayerProfile * pp);
+        PlayerProfile * getPlayerProfile();
 };

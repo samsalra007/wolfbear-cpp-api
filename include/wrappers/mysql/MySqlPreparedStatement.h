@@ -27,7 +27,7 @@ class MySqlPreparedStatement{
         void setFloat(const float value);
         void setInt(const int value);
 
-        std::unique_ptr<MySqlResultBinder> executeQuery();
+        std::vector<MySqlResultBinder> executeQuery();
 
         void disconnect();
         void disconnect(MYSQL * connection);

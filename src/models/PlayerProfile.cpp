@@ -33,37 +33,37 @@ PlayerProfile* PlayerProfile::setId(const int id){
     return this;
 }
 
-PlayerProfile* PlayerProfile::setUsername(const std::string& username){
+PlayerProfile* PlayerProfile::setUsername(const std::string username){
     this->username = username;
     return this;
 }
 
-PlayerProfile* PlayerProfile::setPassword(const std::string& password){
+PlayerProfile* PlayerProfile::setPassword(const std::string password){
     this->password = password;
     return this;
 }
 
-PlayerProfile* PlayerProfile::setNames(const std::string& names){
+PlayerProfile* PlayerProfile::setNames(const std::string names){
     this->names = names;
     return this;
 }
 
-PlayerProfile* PlayerProfile::setLastName(const std::string& lastName){
+PlayerProfile* PlayerProfile::setLastName(const std::string lastName){
     this->lastName = lastName;
     return this;
 }
 
-PlayerProfile* PlayerProfile::setPrefferedName(const std::string& prefferedName){
+PlayerProfile* PlayerProfile::setPrefferedName(const std::string prefferedName){
     this->prefferedName = prefferedName;
     return this;
 }
 
-PlayerProfile* PlayerProfile::setEmail(const std::string& email){
+PlayerProfile* PlayerProfile::setEmail(const std::string email){
     this->email = email;
     return this;
 }
 
-PlayerProfile* PlayerProfile::setProfileImage(const std::string& profileImage){
+PlayerProfile* PlayerProfile::setProfileImage(const std::string profileImage){
     this->profileImage = profileImage;
     return this;
 }

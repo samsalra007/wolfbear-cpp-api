@@ -19,6 +19,7 @@ CREATE TABLE players (
 ) ENGINE = InnoDB charset=utf8;
 
 INSERT INTO players (username, password) VALUES ('wolfbear', MD5('welcome'));
+INSERT INTO players (username, password) VALUES ('samsalra', MD5('welcome'));
 
 -- Tabla de perfiles
 DROP TABLE IF EXISTS profiles;
@@ -39,6 +40,7 @@ CREATE TABLE profiles (
 ) ENGINE = InnoDB charset=utf8;
 
 INSERT INTO profiles (player_id, names, lastname, email, prefferedName, profile_image, latest_timestamp_date) VALUES(1, "Cheese", "Wolfbear", "cheesewolfbear@example.com", "Cheese", "profile.png", FROM_UNIXTIME(1751064237));
+INSERT INTO profiles (player_id, names, lastname, email, prefferedName, profile_image, latest_timestamp_date) VALUES(2, "Samuel", "Salazar", "samsalra@example.com", "Samsalra.007", "profile.png", FROM_UNIXTIME(1751064237));
 
 CREATE TABLE profiles_latest (
     profile_id INT NOT NULL,
@@ -50,6 +52,7 @@ CREATE TABLE profiles_latest (
 ) ENGINE = InnoDB charset=utf8;
 
 INSERT INTO profiles_latest (profile_id, latest_timestamp_date) VALUES (1, FROM_UNIXTIME(1751064237));
+INSERT INTO profiles_latest (profile_id, latest_timestamp_date) VALUES (2, FROM_UNIXTIME(1751064237));
 
 SELECT 
     players.username,

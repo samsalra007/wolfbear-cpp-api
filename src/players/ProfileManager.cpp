@@ -45,8 +45,8 @@ DeletePlayerResponse* ProfileManager::deletePlayer(const DeletePlayerRequest *re
     return response;
 }
 
-GetPlayerResponse* ProfileManager::getPlayer(const GetPlayerRequest * request){
-    GetPlayerResponse * response = new GetPlayerResponse();
+std::unique_ptr<GetPlayerResponse> ProfileManager::getPlayer(std::unique_ptr<GetPlayerRequest> & request){
+    auto response = std::make_unique<GetPlayerResponse>();
     
     PlayerProfile * playerProfile = this->playerProfileDbDao
         ->getPlayer(request->getId());
