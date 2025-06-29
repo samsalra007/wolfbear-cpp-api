@@ -1,13 +1,15 @@
 #pragma once
+
 #include "models/PlayerProfile.h"
+#include <string>
 
 class GetPlayerRequest {
     private:
-        int id;
+        std::string id;
     public:
         GetPlayerRequest();
         ~GetPlayerRequest();
 
-        GetPlayerRequest* setId(int id);
-        int getId() const;
+        GetPlayerRequest * setId(const std::string id);
+        std::string getId() const;
 };

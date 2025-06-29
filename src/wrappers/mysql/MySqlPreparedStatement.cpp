@@ -30,12 +30,12 @@ void MySqlPreparedStatement::setString(const std::string value){
     bindings.push_back(binding);
 }
 
-void MySqlPreparedStatement::setInt(const int value){
+void MySqlPreparedStatement::setInt(const std::int32_t value){
     intStorage.push_back(value); // guarda una copia
     int& storedValue = intStorage.back(); // referencia válida
 
     MYSQL_BIND binding = {};
-    binding.buffer_type = MYSQL_TYPE_LONG;
+    binding.buffer_type = MYSQL_TYPE_INT24;
     binding.buffer = (void *) &storedValue;
     binding.is_null = 0;
     binding.length = nullptr; // para enteros no es necesario usualmente
@@ -48,7 +48,20 @@ void MySqlPreparedStatement::setFloat(const float value){
     float& storedValue = floatStorage.back(); // referencia válida
 
     MYSQL_BIND binding = {};
-    binding.buffer_type = MYSQL_TYPE_LONG;
+    binding.buffer_type = MYSQL_TYPE_FLOAT;
+    binding.buffer = (void *) &storedValue;
+    binding.is_null = 0;
+    binding.length = nullptr; // para enteros no es necesario usualmente
+
+    bindings.push_back(binding);
+}
+
+void MySqlPreparedStatement::setEpochTime(const uint64_t value){
+    floatStorage.push_back(value); // guarda una copia
+    float& storedValue = floatStorage.back(); // referencia válida
+
+    MYSQL_BIND binding = {};
+    binding.buffer_type = MYSQL_TYPE_LONGLONG;
     binding.buffer = (void *) &storedValue;
     binding.is_null = 0;
     binding.length = nullptr; // para enteros no es necesario usualmente

@@ -11,6 +11,12 @@ MySqlWrapper::MySqlWrapper(){
 
 MySqlWrapper::~MySqlWrapper(){
     std::cout << "Destruyendo objeto MySqlWrapper" << std::endl;
+    if(this->connection && mysql_ping(this->connection) == 0){
+        std::cout << "Cerrando conexion a la base de datos" << std::endl;
+        mysql_close(this->connection);
+    } else {
+        std::cout << "La conexion a la base de datos ya estaba cerrada" << std::endl;
+    }
 }
 
 MYSQL * MySqlWrapper::connect(const std::string host, int port, const std::string username, const std::string password, const std::string database){

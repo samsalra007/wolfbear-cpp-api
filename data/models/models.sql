@@ -10,22 +10,21 @@ USE wolfbear_os;
 
 -- Tabla base de jugadores
 CREATE TABLE players (
-    id INT NOT NULL AUTO_INCREMENT,
+    player_id varchar(128),
 
     username VARCHAR(20),
     password VARCHAR(200),
 
-    PRIMARY KEY (id)
+    PRIMARY KEY (player_id)
 ) ENGINE = InnoDB charset=utf8;
 
-INSERT INTO players (username, password) VALUES ('wolfbear', MD5('welcome'));
-INSERT INTO players (username, password) VALUES ('samsalra', MD5('welcome'));
+INSERT INTO players (player_id, username, password) VALUES ('wolfbear.os.user.d2031eb7b1ede416', 'wolfbear', MD5('welcome'));
 
 -- Tabla de perfiles
 DROP TABLE IF EXISTS profiles;
 CREATE TABLE profiles (
-    id INT NOT NULL AUTO_INCREMENT,
-    player_id INT NOT NULL,
+    profile_id varchar(128),
+    player_id varchar(128),
 
     names VARCHAR(30),
     lastname VARCHAR(60),
@@ -35,24 +34,24 @@ CREATE TABLE profiles (
 
     latest_timestamp_date TIMESTAMP,
     
-    PRIMARY KEY(id),
-    FOREIGN KEY (player_id) REFERENCES players(id)
+    PRIMARY KEY(profile_id),
+    FOREIGN KEY (player_id) REFERENCES players(player_id)
 ) ENGINE = InnoDB charset=utf8;
 
-INSERT INTO profiles (player_id, names, lastname, email, prefferedName, profile_image, latest_timestamp_date) VALUES(1, "Cheese", "Wolfbear", "cheesewolfbear@example.com", "Cheese", "profile.png", FROM_UNIXTIME(1751064237));
-INSERT INTO profiles (player_id, names, lastname, email, prefferedName, profile_image, latest_timestamp_date) VALUES(2, "Samuel", "Salazar", "samsalra@example.com", "Samsalra.007", "profile.png", FROM_UNIXTIME(1751064237));
+INSERT INTO profiles (profile_id, player_id, names, lastname, email, prefferedName, profile_image, latest_timestamp_date)
+    VALUES('wolfbear.os.profile.cdef84625ba1eb5a', 'wolfbear.os.user.d2031eb7b1ede416', "Cheese", "Wolfbear", "cheesewolfbear@example.com", "Cheese", "profile.png", FROM_UNIXTIME(1751064237));
 
 CREATE TABLE profiles_latest (
-    profile_id INT NOT NULL,
+    profile_id varchar(128),
     latest_timestamp_date TIMESTAMP,
 
     PRIMARY KEY(profile_id),
-    FOREIGN KEY (profile_id) REFERENCES profiles(id)
+    FOREIGN KEY (profile_id) REFERENCES profiles(profile_id)
     
 ) ENGINE = InnoDB charset=utf8;
 
-INSERT INTO profiles_latest (profile_id, latest_timestamp_date) VALUES (1, FROM_UNIXTIME(1751064237));
-INSERT INTO profiles_latest (profile_id, latest_timestamp_date) VALUES (2, FROM_UNIXTIME(1751064237));
+INSERT INTO profiles_latest (profile_id, latest_timestamp_date)
+    VALUES ('wolfbear.os.profile.cdef84625ba1eb5a', FROM_UNIXTIME(1751064237));
 
 SELECT 
     players.username,
@@ -60,8 +59,9 @@ SELECT
 FROM 
     profiles, profiles_latest, players
 WHERE
-    profiles.id = profiles_latest.profile_id
-    AND players.id = profiles_latest.profile_id
+    profiles.profile_id = profiles_latest.profile_id
+    AND profiles.latest_timestamp_date = profiles_latest.latest_timestamp_date
+    AND players.player_id = profiles.player_id;
 
 -- Tabla de aplicaciones
 CREATE TABLE applications (

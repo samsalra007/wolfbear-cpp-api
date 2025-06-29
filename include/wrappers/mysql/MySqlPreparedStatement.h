@@ -25,7 +25,8 @@ class MySqlPreparedStatement{
         void setQuery(std::string query);
         void setString(const std::string value);
         void setFloat(const float value);
-        void setInt(const int value);
+        void setInt(const std::int32_t value);
+        void setEpochTime(const uint64_t value);
 
         std::vector<MySqlResultBinder> executeQuery();
 

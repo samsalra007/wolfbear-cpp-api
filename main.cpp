@@ -9,7 +9,7 @@
 
 int main () {
     std::cout << "Hola, esto esta ejecutandose en C++ " << std:: endl;
-    int playerId = 1;
+    std::string playerId = "wolfbear.os.user.d2031eb7b1ede416";
 
     auto profileManager     = std::make_unique<ProfileManager>();
     auto request            = std::make_unique<GetPlayerRequest>();

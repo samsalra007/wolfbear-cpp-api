@@ -3,7 +3,7 @@
 
 class PlayerProfile {
 private:
-    int id;
+    std::string id;
     std::string username;
     std::string password;
     std::string names;
@@ -15,7 +15,7 @@ private:
 public:
     PlayerProfile() = default;
     PlayerProfile(
-        const int id,
+        const std::string& id,
         const std::string& username,
         const std::string& password,
         const std::string& names,
@@ -26,7 +26,7 @@ public:
     );
     ~PlayerProfile();
 
-    PlayerProfile* setId(const int id);
+    PlayerProfile* setId(const std::string id);
     PlayerProfile* setUsername(const std::string username);
     PlayerProfile* setPassword(const std::string password);
     PlayerProfile* setNames(const std::string names);
@@ -35,7 +35,7 @@ public:
     PlayerProfile* setPrefferedName(const std::string prefferedName);
     PlayerProfile* setProfileImage(const std::string profileImage);
 
-    int getId() const;
+    std::string getId() const;
     std::string getUsername() const;
     std::string getPassword() const;
     std::string getNames() const;

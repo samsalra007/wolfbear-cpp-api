@@ -3,7 +3,7 @@
 #include "models/PlayerProfile.h"
 
 PlayerProfile::PlayerProfile(
-    const int id,
+    const std::string& id,
     const std::string& username,
     const std::string& password,
     const std::string& names,
@@ -28,7 +28,7 @@ PlayerProfile::~PlayerProfile(){
     std::cout << "[PlayerProfile] destruyendo objeto con id: " << this->id << std::endl;
 }
 
-PlayerProfile* PlayerProfile::setId(const int id){
+PlayerProfile* PlayerProfile::setId(const std::string id){
     this->id = id;
     return this;
 }
@@ -68,7 +68,7 @@ PlayerProfile* PlayerProfile::setProfileImage(const std::string profileImage){
     return this;
 }
 
-int PlayerProfile::getId() const {
+std::string PlayerProfile::getId() const {
     return this->id;
 }
 
